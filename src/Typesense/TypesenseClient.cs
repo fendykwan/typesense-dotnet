@@ -42,7 +42,8 @@ public class TypesenseClient : ITypesenseClient
         ArgumentNullException.ThrowIfNull(httpClient);
 
         var node = config.Value.Nodes.First();
-        httpClient.BaseAddress = new Uri($"{node.Protocol}://{node.Host}:{node.Port}");
+        UriBuilder typeSenseUriBuilder = new UriBuilder(node.Protocol, node.Host, int.Parse(node.Port), node.AdditionalPath);
+        httpClient.BaseAddress = typeSenseUriBuilder.Uri;
         httpClient.DefaultRequestHeaders.Add("X-TYPESENSE-API-KEY", config.Value.ApiKey);
         _httpClient = httpClient;
         if (config.Value.JsonSerializerOptions is not null)
